@@ -24,15 +24,23 @@ RUN curl -sS https://getcomposer.org/installer | php \
 # conf
 COPY ./docker/app/www.conf /usr/local/etc/php-fpm.d/www.conf
 
+# Composer 依存パッケージ定義のコピー
+COPY composer.* /var/www/html/
+RUN composer install --working-dir=/var/www/html --no-scripts --no-autoloader
+
 # app
 COPY . /var/www/html
 WORKDIR /var/www/html
-#RUN composer install --optimize-autoloader --no-dev \
-RUN composer install --optimize-autoloader \
+
+RUN composer dump-autoload --working-dir=/var/www/html --no-scripts
+
+RUN set -eux \
+    && chmod -R a=rwX storage/ bootstrap/cache \
+#    && composer install --no-scripts --no-autoloader \
+#    && composer install --optimize-autoloader \
     && cp .env.example .env \
     && php artisan config:clear \
     && php artisan route:cache \
-    && php artisan view:cache \
-    && chmod -R a+w storage/ bootstrap/cache
-
+    && php artisan view:cache
+#    && composer dump-autoload --working-dir=/var/www/html --no-scripts
 EXPOSE 9000
