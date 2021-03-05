@@ -3,7 +3,8 @@ FROM php:7.4-fpm-alpine
 RUN apk upgrade --update \
     && apk --no-cache add icu-dev autoconf make g++ gcc curl libzip-dev
 
-RUN docker-php-ext-install pdo_mysql zip opcache
+RUN docker-php-ext-configure opcache --enable-opcache \
+    && docker-php-ext-install pdo_mysql zip opcache
 
 #RUN { \
 #  echo 'fastcgi.logging = 1'; \
@@ -23,6 +24,7 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 # conf
 COPY ./docker/app/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./docker/app/conf.d/customize.ini /usr/local/etc/php/conf.d/customize.ini
 
 # Composer 依存パッケージ定義のコピー
 COPY composer.* /var/www/html/
