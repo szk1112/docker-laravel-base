@@ -23,8 +23,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
 # conf
-COPY ./docker/app/www.conf /usr/local/etc/php-fpm.d/www.conf
-COPY ./docker/app/conf.d/customize.ini /usr/local/etc/php/conf.d/customize.ini
+COPY ./docker/php-fpm/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY ./docker/php-fpm/conf.d/customize.ini /usr/local/etc/php/conf.d/customize.ini
 
 # Composer 依存パッケージ定義のコピー
 COPY composer.* /var/www/html/
