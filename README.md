@@ -1,5 +1,5 @@
 ## About App
-Local run
+Local Sandbox
 ```bash
 docker-compose build -no--cache
 docker-compose up -d
